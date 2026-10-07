@@ -1,29 +1,30 @@
 import { createApp } from './app';
 import { env } from './config/env';
+import { logger } from './lib/logger';
 import { prisma } from './lib/prisma';
 
 async function main() {
   await prisma.$connect();
-  console.log('Database connected');
+  logger.info('Database connected');
 
   const app = createApp();
 
   const server = app.listen(env.PORT, () => {
-    console.log(`Server running on http://localhost:${env.PORT} (${env.NODE_ENV})`);
+    logger.info(`Server running on http://localhost:${env.PORT} (${env.NODE_ENV})`);
   });
 
   function shutdown(signal: string) {
-    console.log(`${signal} received, shutting down`);
+    logger.info(`${signal} received, shutting down`);
 
     server.close(async (err) => {
       try {
         await prisma.$disconnect();
       } catch (disconnectError) {
-        console.error('Error while disconnecting from database', disconnectError);
+        logger.error({ err: disconnectError }, 'Error while disconnecting from database');
       }
 
       if (err) {
-        console.error('Error while closing server', err);
+        logger.error({ err }, 'Error while closing server');
         process.exit(1);
       }
 
@@ -39,7 +40,7 @@ async function main() {
 }
 
 main().catch(async (error) => {
-  console.error('Failed to start server', error);
+  logger.error({ err: error }, 'Failed to start server');
   await prisma.$disconnect().catch(() => undefined);
   process.exit(1);
 });
