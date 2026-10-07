@@ -12,9 +12,16 @@ type ToolbarProps = {
   current: ParsedSearchParams;
   filtersVisible: boolean;
   onToggleFilters: () => void;
+  onOpenMobileFilters: () => void;
 };
 
-export function Toolbar({ total, current, filtersVisible, onToggleFilters }: ToolbarProps) {
+export function Toolbar({
+  total,
+  current,
+  filtersVisible,
+  onToggleFilters,
+  onOpenMobileFilters,
+}: ToolbarProps) {
   return (
     <div className={styles.toolbar}>
       <div className={styles.left}>
@@ -34,7 +41,7 @@ export function Toolbar({ total, current, filtersVisible, onToggleFilters }: Too
       </div>
 
       <div className={styles.right}>
-        <button type="button" className={styles.mobileFilter} onClick={onToggleFilters}>
+        <button type="button" className={styles.mobileFilter} onClick={onOpenMobileFilters}>
           Filter
           <Image src="/icons/chevron-down.svg" alt="" width={14} height={14} />
         </button>

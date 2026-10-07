@@ -15,12 +15,10 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.filtersPlaceholder {
-  min-height: 280px;
-  padding: 16px;
-  border: 1px dashed var(--color-border);
-  color: var(--color-muted);
-  font-size: 13px;
+.filters {
+  position: sticky;
+  top: 16px;
+  min-width: 0;
 }
 
 .content {
@@ -44,7 +42,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .filtersPlaceholder {
+  .filters {
     display: none;
   }
 }

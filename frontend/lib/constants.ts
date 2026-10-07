@@ -15,6 +15,19 @@ export const SORT_OPTIONS: SortOption[] = [
 
 export const DEFAULT_PAGE_SIZE = 12;
 
+export type PricePreset = {
+  label: string;
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+export const PRICE_PRESETS: PricePreset[] = [
+  { label: 'Under $50', maxPrice: 50 },
+  { label: '$50 – $100', minPrice: 50, maxPrice: 100 },
+  { label: '$100 – $200', minPrice: 100, maxPrice: 200 },
+  { label: '$200 & above', minPrice: 200 },
+];
+
 export const NAV_LINKS = [
   { label: 'SHOP', href: '#' },
   { label: 'SKILLS', href: '#' },
