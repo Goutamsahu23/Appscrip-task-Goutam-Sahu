@@ -14,3 +14,30 @@ export const SORT_OPTIONS: SortOption[] = [
 ];
 
 export const DEFAULT_PAGE_SIZE = 12;
+
+export const NAV_LINKS = [
+  { label: 'SHOP', href: '#' },
+  { label: 'SKILLS', href: '#' },
+  { label: 'STORIES', href: '#' },
+  { label: 'ABOUT', href: '#' },
+  { label: 'CONTACT US', href: '#' },
+] as const;
+
+export const FOOTER_BRAND_LINKS = [
+  'About Us',
+  'Stories',
+  'Artisans',
+  'Boutiques',
+  'Contact Us',
+  'EU Compliances Docs',
+] as const;
+
+export const FOOTER_QUICK_LINKS = [
+  'Orders & Shipping',
+  'Join/Login as a Seller',
+  'Payment & Pricing',
+  'Return & Refunds',
+  'FAQs',
+  'Privacy Policy',
+  'Terms & Conditions',
+] as const;

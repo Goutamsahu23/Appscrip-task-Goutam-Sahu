@@ -1,0 +1,29 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  min-height: 32px;
+  padding: 6px var(--page-gutter);
+  background: var(--color-black);
+  color: var(--color-white);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.item {
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .bar {
+    gap: 16px;
+    justify-content: flex-start;
+  }
+
+  .item:nth-child(2),
+  .item:nth-child(3) {
+    display: none;
+  }
+}

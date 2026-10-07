@@ -1,0 +1,256 @@
+.footer {
+  margin-top: auto;
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 48px var(--page-gutter) 24px;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.heading {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.copy {
+  max-width: 360px;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+.newsletter {
+  display: flex;
+  gap: 0;
+  max-width: 420px;
+}
+
+.email {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: transparent;
+  color: var(--color-white);
+}
+
+.email::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.subscribe {
+  padding: 12px 18px;
+  border: 1px solid var(--color-white);
+  border-left: none;
+  background: transparent;
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.metaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.metaText {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.flag {
+  width: 22px;
+  height: 14px;
+  background:
+    linear-gradient(#b22234 0 0) top / 100% 54% no-repeat,
+    repeating-linear-gradient(#fff 0 7%, #b22234 0 14%),
+    #3c3b6e;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.middle {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr;
+  gap: 40px;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.columnTitle {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+}
+
+.social {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+/* SVG files are dark fills/strokes; invert them on the black footer */
+.lightIcon {
+  filter: brightness(0) invert(1);
+}
+
+.paymentsLabel {
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.payments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.copyright {
+  padding-top: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  text-align: center;
+}
+
+.accordionTrigger {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .top,
+  .middle {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .socialColumn {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding-top: 36px;
+  }
+
+  .top,
+  .middle {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .newsletter {
+    flex-direction: column;
+    max-width: none;
+  }
+
+  .subscribe {
+    border-left: 1px solid var(--color-white);
+    border-top: none;
+  }
+
+  .topLeft,
+  .metaBlock {
+    padding-bottom: 24px;
+  }
+
+  .column {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .accordionTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 0;
+    color: var(--color-white);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .columnTitle {
+    display: none;
+  }
+
+  .columnBody {
+    display: none;
+    padding-bottom: 16px;
+  }
+
+  .columnBodyOpen {
+    display: block;
+  }
+
+  .socialColumn .columnBody {
+    display: block;
+    padding-top: 8px;
+    padding-bottom: 24px;
+  }
+
+  .socialColumn .accordionTrigger {
+    display: none;
+  }
+
+  .socialColumn .paymentsLabel {
+    margin-top: 8px;
+  }
+}

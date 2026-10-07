@@ -97,6 +97,19 @@ ol {
   border: 0;
 }
 
+.appShell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.appMain {
+  flex: 1;
+  width: 100%;
+}
+
 @media (max-width: 1024px) {
   :root {
     --page-gutter: 20px;
