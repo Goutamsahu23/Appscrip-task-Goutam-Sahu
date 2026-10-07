@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PRICE_PRESETS } from '@/lib/constants';
 import { hrefWithParams, type ParsedSearchParams } from '@/lib/searchParams';
 import type { Category } from '@/types/product';
 
+import { useNavigationPending } from './NavigationPending';
 import styles from './FilterSidebar.module.css';
 
 type FilterSidebarProps = {
@@ -18,7 +19,7 @@ type FilterSidebarProps = {
 
 export function FilterSidebar({ categories, current, onNavigate }: FilterSidebarProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { isPending, startTransition } = useNavigationPending();
   const [categoryOpen, setCategoryOpen] = useState(true);
   const [priceOpen, setPriceOpen] = useState(true);
   const [query, setQuery] = useState(current.q ?? '');
@@ -44,7 +45,7 @@ export function FilterSidebar({ categories, current, onNavigate }: FilterSidebar
     }, 350);
 
     return () => window.clearTimeout(timer);
-  }, [query, current, router]);
+  }, [query, current, router, startTransition]);
 
   function navigate(changes: Parameters<typeof hrefWithParams>[1]) {
     startTransition(() => {

@@ -23,6 +23,12 @@
 
 .content {
   min-width: 0;
+  transition: opacity var(--transition);
+}
+
+.contentPending {
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 @media (max-width: 1024px) {

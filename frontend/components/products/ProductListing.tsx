@@ -5,8 +5,10 @@ import { useState } from 'react';
 import type { ParsedSearchParams } from '@/lib/searchParams';
 import type { Category, Product } from '@/types/product';
 
+import { EmptyState } from './EmptyState';
 import { FilterDrawer } from './FilterDrawer';
 import { FilterSidebar } from './FilterSidebar';
+import { NavigationPendingProvider, useNavigationPending } from './NavigationPending';
 import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
 import styles from './ProductListing.module.css';
@@ -21,7 +23,15 @@ type ProductListingProps = {
   categories: Category[];
 };
 
-export function ProductListing({
+export function ProductListing(props: ProductListingProps) {
+  return (
+    <NavigationPendingProvider>
+      <ProductListingInner {...props} />
+    </NavigationPendingProvider>
+  );
+}
+
+function ProductListingInner({
   total,
   totalPages,
   page,
@@ -29,11 +39,13 @@ export function ProductListing({
   products,
   categories,
 }: ProductListingProps) {
+  const { isPending } = useNavigationPending();
   const [filtersVisible, setFiltersVisible] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const isEmpty = products.length === 0;
 
   return (
-    <section className={styles.listing}>
+    <section className={styles.listing} data-pending={isPending ? 'true' : 'false'}>
       <Toolbar
         total={total}
         current={current}
@@ -51,9 +63,18 @@ export function ProductListing({
             <FilterSidebar categories={categories} current={current} />
           </aside>
         ) : null}
-        <div className={styles.content}>
-          <ProductGrid products={products} />
-          <Pagination current={current} page={page} totalPages={totalPages} />
+        <div
+          className={`${styles.content} ${isPending ? styles.contentPending : ''}`}
+          aria-busy={isPending}
+        >
+          {isEmpty ? (
+            <EmptyState current={current} />
+          ) : (
+            <>
+              <ProductGrid products={products} />
+              <Pagination current={current} page={page} totalPages={totalPages} />
+            </>
+          )}
         </div>
       </div>
 

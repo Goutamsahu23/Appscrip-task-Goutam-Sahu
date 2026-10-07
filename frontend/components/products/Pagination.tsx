@@ -1,8 +1,13 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import type { ComponentProps, MouseEvent, ReactNode } from 'react';
 
 import { hrefWithParams, type ParsedSearchParams } from '@/lib/searchParams';
 
+import { useNavigationPending } from './NavigationPending';
 import styles from './Pagination.module.css';
 
 type PaginationProps = {
@@ -32,6 +37,34 @@ function getPageItems(page: number, totalPages: number): Array<number | 'ellipsi
   return items;
 }
 
+type PendingLinkProps = {
+  href: string;
+  className: string;
+  children: ReactNode;
+} & Omit<ComponentProps<typeof Link>, 'href' | 'className' | 'children' | 'onClick'>;
+
+function PendingLink({ href, className, children, ...rest }: PendingLinkProps) {
+  const router = useRouter();
+  const { startTransition } = useNavigationPending();
+
+  function onClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    startTransition(() => {
+      router.push(href);
+    });
+  }
+
+  return (
+    <Link className={className} href={href} onClick={onClick} {...rest}>
+      {children}
+    </Link>
+  );
+}
+
 export function Pagination({ current, page, totalPages }: PaginationProps) {
   if (totalPages <= 1) return null;
 
@@ -44,7 +77,12 @@ export function Pagination({ current, page, totalPages }: PaginationProps) {
       <ul className={styles.list}>
         <li>
           {previousHref ? (
-            <Link className={styles.link} href={previousHref} aria-label="Previous page" rel="prev">
+            <PendingLink
+              className={styles.link}
+              href={previousHref}
+              aria-label="Previous page"
+              rel="prev"
+            >
               <Image
                 className={styles.arrowIcon}
                 src="/icons/chevron-left.svg"
@@ -52,7 +90,7 @@ export function Pagination({ current, page, totalPages }: PaginationProps) {
                 width={16}
                 height={16}
               />
-            </Link>
+            </PendingLink>
           ) : (
             <span className={styles.disabled} aria-disabled="true" aria-label="Previous page">
               <Image
@@ -80,13 +118,13 @@ export function Pagination({ current, page, totalPages }: PaginationProps) {
                   {item}
                 </span>
               ) : (
-                <Link
+                <PendingLink
                   className={styles.link}
                   href={hrefWithParams(current, { page: item })}
                   aria-label={`Page ${item}`}
                 >
                   {item}
-                </Link>
+                </PendingLink>
               )}
             </li>
           ),
@@ -94,7 +132,7 @@ export function Pagination({ current, page, totalPages }: PaginationProps) {
 
         <li>
           {nextHref ? (
-            <Link className={styles.link} href={nextHref} aria-label="Next page" rel="next">
+            <PendingLink className={styles.link} href={nextHref} aria-label="Next page" rel="next">
               <Image
                 className={`${styles.arrowIcon} ${styles.arrowNext}`}
                 src="/icons/chevron-left.svg"
@@ -102,7 +140,7 @@ export function Pagination({ current, page, totalPages }: PaginationProps) {
                 width={16}
                 height={16}
               />
-            </Link>
+            </PendingLink>
           ) : (
             <span className={styles.disabled} aria-disabled="true" aria-label="Next page">
               <Image

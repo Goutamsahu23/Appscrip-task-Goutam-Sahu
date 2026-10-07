@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useId, useRef, useState, useTransition } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import { SORT_OPTIONS } from '@/lib/constants';
 import { hrefWithParams, type ParsedSearchParams } from '@/lib/searchParams';
 import type { SortValue } from '@/types/product';
 
+import { useNavigationPending } from './NavigationPending';
 import styles from './SortDropdown.module.css';
 
 type SortDropdownProps = {
@@ -16,8 +17,8 @@ type SortDropdownProps = {
 
 export function SortDropdown({ current }: SortDropdownProps) {
   const router = useRouter();
+  const { isPending, startTransition } = useNavigationPending();
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
   const rootRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
 
