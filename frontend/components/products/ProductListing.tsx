@@ -71,7 +71,7 @@ function ProductListingInner({
             <EmptyState current={current} />
           ) : (
             <>
-              <ProductGrid products={products} />
+              <ProductGrid products={products} filtersVisible={filtersVisible} />
               <Pagination current={current} page={page} totalPages={totalPages} />
             </>
           )}

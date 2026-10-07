@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Appscrip Product Listing (Frontend)
 
-## Getting Started
+Next.js App Router storefront that renders a server-side product listing from the local Express API. Filters, sort, search, and pagination are all driven by the URL so results stay shareable and crawlable.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 20+
+- Backend API running (see root [`README.md`](../README.md)) — default `http://localhost:4000`
+
+## Setup
 
 ```bash
+cd frontend
+cp .env.example .env.local
+# confirm API_URL points at your backend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy [`.env.example`](.env.example) to `.env.local`. Never commit `.env.local`.
 
-## Learn More
+| Variable | Required | Description |
+| --- | --- | --- |
+| `API_URL` | yes | Backend API base URL used by server components (e.g. `http://localhost:4000/api`) |
 
-To learn more about Next.js, take a look at the following resources:
+`API_URL` is read only on the server (`getProducts` / `getCategories`). It is not exposed to the browser bundle.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Run these from `frontend/`:
 
-## Deploy on Vercel
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Start Next.js (Turbopack) on port 3000 |
+| `npm run build` | Production build |
+| `npm start` | Serve the production build |
+| `npm run typecheck` | Type-check without emit |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier write |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **SSR product listing** — products and categories fetched on the server from the backend API
+- **URL state** — `page`, `limit`, `category`, `minPrice`, `maxPrice`, `sort`, `q`
+- **Filters** — category, price presets / custom range, debounced search; desktop sidebar + mobile drawer
+- **Sort** — recommended, newest, popular, price asc/desc
+- **Pagination** — crawlable `<Link>` prev / page / next controls
+- **UX states** — loading skeleton, pending transition dim, empty state, error boundary
+- **Layout** — announcement bar, header (mobile menu), hero, footer
+- **Styling** — CSS Modules + design tokens in `app/globals.css`
+- **Icons** — SVG files under `public/icons/` (no inline icon components)
+
+## URL examples
+
+```text
+http://localhost:3000/
+http://localhost:3000/?sort=price_asc
+http://localhost:3000/?category=electronics&minPrice=50&maxPrice=200
+http://localhost:3000/?q=jacket&page=2
+```
+
+## Project structure
+
+```text
+frontend/
+  app/                     # App Router pages, layout, loading, error
+  components/
+    layout/                # AnnouncementBar, Header, Footer, MobileMenu
+    products/              # Hero, Toolbar, filters, grid, cards, pagination
+  lib/                     # API client, searchParams helpers, constants
+  public/icons/            # SVG icons
+  types/                   # Shared TypeScript types
+```
+
+## Notes
+
+- The frontend never calls FakeStore directly — only this project’s backend.
+- Inter is used as the body font (Simplon Norm from the design file is not freely available).
+- Keep the backend running while developing; otherwise `app/error.tsx` will surface an API failure state.

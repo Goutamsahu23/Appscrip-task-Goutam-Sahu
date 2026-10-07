@@ -6,7 +6,6 @@ import styles from './ProductCard.module.css';
 
 type ProductCardProps = {
   product: Product;
-  showNewBadge?: boolean;
 };
 
 function formatPrice(price: number) {
@@ -16,7 +15,7 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export function ProductCard({ product, showNewBadge = false }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const image = product.images[0];
   const imageSrc = image?.url ?? '/icons/logo-mark.svg';
   const imageAlt = image?.alt ?? product.title;
@@ -24,7 +23,6 @@ export function ProductCard({ product, showNewBadge = false }: ProductCardProps)
   return (
     <article className={styles.card}>
       <div className={styles.media}>
-        {showNewBadge ? <span className={styles.badge}>New product</span> : null}
         <Image
           className={styles.image}
           src={imageSrc}

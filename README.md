@@ -1,8 +1,38 @@
-# Appscrip Products API
+# Appscrip Shop
 
-Node.js backend for browsing products and categories. Built with Express, TypeScript, Prisma, and PostgreSQL.
+Full-stack product listing assignment:
 
-The API reads from its own database. Seed data comes from the FakeStore product set (live API when available, local snapshot otherwise). The frontend should call this API only — not FakeStore directly.
+- **`backend/`** — Express + Prisma + PostgreSQL API
+- **`frontend/`** — Next.js App Router PLP (SSR, filters, sort, pagination)
+
+The API reads from its own database. Seed data comes from the FakeStore product set (live API when available, local snapshot otherwise). The frontend calls this API only — not FakeStore directly.
+
+## Quick start
+
+```bash
+# 1) API
+cd backend
+cp .env.example .env
+npm install
+npm run db:migrate
+npm run db:seed
+npm run dev
+
+# 2) Storefront (new terminal)
+cd frontend
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+- API: `http://localhost:4000`
+- Storefront: `http://localhost:3000`
+
+Frontend details: [`frontend/README.md`](frontend/README.md).
+
+---
+
+# Backend (Products API)
 
 ## Prerequisites
 

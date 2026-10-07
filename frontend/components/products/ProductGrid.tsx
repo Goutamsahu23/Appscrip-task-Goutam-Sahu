@@ -5,14 +5,15 @@ import styles from './ProductGrid.module.css';
 
 type ProductGridProps = {
   products: Product[];
+  filtersVisible?: boolean;
 };
 
-export function ProductGrid({ products }: ProductGridProps) {
+export function ProductGrid({ products, filtersVisible = true }: ProductGridProps) {
   return (
-    <ul className={styles.grid}>
-      {products.map((product, index) => (
+    <ul className={`${styles.grid} ${filtersVisible ? styles.cols3 : styles.cols4}`}>
+      {products.map((product) => (
         <li key={product.id}>
-          <ProductCard product={product} showNewBadge={index === 0} />
+          <ProductCard product={product} />
         </li>
       ))}
     </ul>

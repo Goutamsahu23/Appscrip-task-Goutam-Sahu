@@ -2,6 +2,7 @@
   max-width: var(--page-max);
   margin: 0 auto;
   padding: 24px var(--page-gutter) 48px;
+  overflow-x: clip;
 }
 
 .body {
@@ -22,6 +23,7 @@
 }
 
 .content {
+  width: 100%;
   min-width: 0;
   transition: opacity var(--transition);
 }
@@ -35,6 +37,10 @@
   .body {
     grid-template-columns: 220px minmax(0, 1fr);
     gap: 24px;
+  }
+
+  .bodyFiltersHidden {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

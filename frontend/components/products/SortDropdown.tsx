@@ -76,12 +76,12 @@ export function SortDropdown({ current }: SortDropdownProps) {
                   className={`${styles.option} ${selected ? styles.optionActive : ''}`}
                   onClick={() => selectSort(option.value)}
                 >
-                  <span className={styles.checkSlot}>
+                  <span className={styles.label}>{option.label}</span>
+                  <span className={styles.checkSlot} aria-hidden="true">
                     {selected ? (
                       <Image src="/icons/check.svg" alt="" width={16} height={16} />
                     ) : null}
                   </span>
-                  {option.label}
                 </button>
               </li>
             );

@@ -90,6 +90,12 @@
 }
 
 @media (max-width: 768px) {
+  .topRow {
+    gap: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
   .menuButton {
     display: inline-flex;
   }
@@ -109,5 +115,20 @@
 
   .nav {
     display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .topRow {
+    gap: 8px;
+  }
+
+  .brand {
+    font-size: 18px;
+    letter-spacing: 0.04em;
+  }
+
+  .actions {
+    gap: 8px;
   }
 }
