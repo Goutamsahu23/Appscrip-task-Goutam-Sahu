@@ -85,10 +85,11 @@ export function toProductQuery(params: ParsedSearchParams): ProductQuery {
   };
 }
 
-export function buildQuery(
-  current: ParsedSearchParams,
-  changes: Partial<ParsedSearchParams> & { page?: number | null },
-): string {
+type QueryChanges = Omit<Partial<ParsedSearchParams>, 'page'> & {
+  page?: number | null;
+};
+
+export function buildQuery(current: ParsedSearchParams, changes: QueryChanges): string {
   const next: ParsedSearchParams = {
     ...current,
     ...changes,
@@ -122,10 +123,7 @@ export function buildQuery(
   return query ? `?${query}` : '/';
 }
 
-export function hrefWithParams(
-  current: ParsedSearchParams,
-  changes: Partial<ParsedSearchParams> & { page?: number | null },
-): string {
+export function hrefWithParams(current: ParsedSearchParams, changes: QueryChanges): string {
   const query = buildQuery(current, changes);
   return query.startsWith('?') ? `/${query}` : query;
 }

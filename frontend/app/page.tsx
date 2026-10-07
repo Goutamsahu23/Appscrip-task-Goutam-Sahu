@@ -1,4 +1,7 @@
+import { Hero } from '@/components/products/Hero';
+import { ProductListing } from '@/components/products/ProductListing';
 import { getProducts } from '@/lib/api';
+import { SORT_OPTIONS } from '@/lib/constants';
 import { parseSearchParams, toProductQuery } from '@/lib/searchParams';
 
 type HomePageProps = {
@@ -10,13 +13,29 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const params = parseSearchParams(rawParams);
   const { meta } = await getProducts(toProductQuery(params));
 
+  const activeSort =
+    SORT_OPTIONS.find((option) => option.value === params.sort)?.label ?? 'RECOMMENDED';
+
   return (
-    <main style={{ padding: '48px 24px', fontFamily: 'var(--font-body), sans-serif' }}>
-      <h1 style={{ fontSize: '24px', marginBottom: '12px' }}>DISCOVER OUR PRODUCTS</h1>
-      <p data-testid="item-count">{meta.total} ITEMS</p>
-      {params.category ? <p>category: {params.category}</p> : null}
-      {params.sort ? <p>sort: {params.sort}</p> : null}
-      {params.q ? <p>q: {params.q}</p> : null}
+    <main>
+      <Hero />
+      <ProductListing total={meta.total} current={params}>
+        {/* Temporary SSR proof until the product grid ships */}
+        <p className="srOnly" data-testid="item-count">
+          {meta.total} Items
+        </p>
+        <p style={{ fontSize: 14, lineHeight: 1.6 }}>
+          Showing <strong data-testid="ssr-total">{meta.total}</strong> products.
+          <br />
+          Active sort: <strong data-testid="ssr-sort">{activeSort}</strong>
+          {params.category ? (
+            <>
+              <br />
+              Category: <strong>{params.category}</strong>
+            </>
+          ) : null}
+        </p>
+      </ProductListing>
     </main>
   );
 }
