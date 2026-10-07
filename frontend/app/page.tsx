@@ -21,6 +21,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <Hero />
       <ProductListing
         total={meta.total}
+        totalPages={meta.totalPages}
+        page={meta.page}
         current={params}
         products={data}
         categories={categories}

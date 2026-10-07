@@ -7,12 +7,15 @@ import type { Category, Product } from '@/types/product';
 
 import { FilterDrawer } from './FilterDrawer';
 import { FilterSidebar } from './FilterSidebar';
+import { Pagination } from './Pagination';
 import { ProductGrid } from './ProductGrid';
 import styles from './ProductListing.module.css';
 import { Toolbar } from './Toolbar';
 
 type ProductListingProps = {
   total: number;
+  totalPages: number;
+  page: number;
   current: ParsedSearchParams;
   products: Product[];
   categories: Category[];
@@ -20,6 +23,8 @@ type ProductListingProps = {
 
 export function ProductListing({
   total,
+  totalPages,
+  page,
   current,
   products,
   categories,
@@ -48,6 +53,7 @@ export function ProductListing({
         ) : null}
         <div className={styles.content}>
           <ProductGrid products={products} />
+          <Pagination current={current} page={page} totalPages={totalPages} />
         </div>
       </div>
 
