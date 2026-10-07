@@ -27,17 +27,6 @@
   min-width: 0;
 }
 
-.note {
-  color: var(--color-muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.note strong {
-  color: var(--color-text);
-  font-weight: 600;
-}
-
 @media (max-width: 1024px) {
   .body {
     grid-template-columns: 220px minmax(0, 1fr);

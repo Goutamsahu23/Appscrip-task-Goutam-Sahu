@@ -1,19 +1,21 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 
 import type { ParsedSearchParams } from '@/lib/searchParams';
+import type { Product } from '@/types/product';
 
+import { ProductGrid } from './ProductGrid';
 import styles from './ProductListing.module.css';
 import { Toolbar } from './Toolbar';
 
 type ProductListingProps = {
   total: number;
   current: ParsedSearchParams;
-  children: ReactNode;
+  products: Product[];
 };
 
-export function ProductListing({ total, current, children }: ProductListingProps) {
+export function ProductListing({ total, current, products }: ProductListingProps) {
   const [filtersVisible, setFiltersVisible] = useState(true);
 
   return (
@@ -34,7 +36,9 @@ export function ProductListing({ total, current, children }: ProductListingProps
             Filter sidebar will land in the next steps.
           </aside>
         ) : null}
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content}>
+          <ProductGrid products={products} />
+        </div>
       </div>
     </section>
   );
