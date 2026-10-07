@@ -5,6 +5,7 @@ import { env } from './config/env';
 import { errorHandler } from './middlewares/errorHandler';
 import { notFound } from './middlewares/notFound';
 import { requestLogger } from './middlewares/requestLogger';
+import { apiRouter } from './routes';
 
 export function createApp() {
   const app = express();
@@ -20,7 +21,7 @@ export function createApp() {
   );
   app.use(express.json());
 
-  // Routes get mounted here in later steps
+  app.use('/api', apiRouter);
 
   app.use(notFound);
   app.use(errorHandler);
