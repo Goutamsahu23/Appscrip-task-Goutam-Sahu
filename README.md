@@ -122,7 +122,7 @@ Appscrip-task-Goutam-Sahu/
     └── types/
 ```
 
-More frontend detail: [`frontend/README.md`](frontend/README.md).
+Package READMEs: [`backend/README.md`](backend/README.md) · [`frontend/README.md`](frontend/README.md).
 
 ---
 
