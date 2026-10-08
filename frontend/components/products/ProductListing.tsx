@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { ParsedSearchParams } from '@/lib/searchParams';
 import type { Category, Product } from '@/types/product';
@@ -42,6 +42,7 @@ function ProductListingInner({
   const { isPending } = useNavigationPending();
   const [filtersVisible, setFiltersVisible] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const mobileFilterRef = useRef<HTMLButtonElement>(null);
   const isEmpty = products.length === 0;
 
   return (
@@ -52,6 +53,7 @@ function ProductListingInner({
         filtersVisible={filtersVisible}
         onToggleFilters={() => setFiltersVisible((value) => !value)}
         onOpenMobileFilters={() => setDrawerOpen(true)}
+        mobileFilterRef={mobileFilterRef}
       />
 
       <div
@@ -67,6 +69,7 @@ function ProductListingInner({
           className={`${styles.content} ${isPending ? styles.contentPending : ''}`}
           aria-busy={isPending}
         >
+          <h2 className="srOnly">Products</h2>
           {isEmpty ? (
             <EmptyState current={current} />
           ) : (
@@ -83,6 +86,7 @@ function ProductListingInner({
         onClose={() => setDrawerOpen(false)}
         categories={categories}
         current={current}
+        triggerRef={mobileFilterRef}
       />
     </section>
   );

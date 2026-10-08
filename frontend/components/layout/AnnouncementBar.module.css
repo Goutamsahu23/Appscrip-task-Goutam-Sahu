@@ -13,14 +13,20 @@
 }
 
 .item {
-  opacity: 0.85;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #eb4c6b;
   white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
   .bar {
-    gap: 16px;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .item:nth-child(2),

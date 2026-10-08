@@ -1,13 +1,27 @@
+import Link from 'next/link';
+
 import styles from './Hero.module.css';
 
 export function Hero() {
   return (
     <section className={styles.hero}>
-      <p className={styles.breadcrumb}>
-        Home
-        <span className={styles.breadcrumbSep}>|</span>
-        <span className={styles.breadcrumbCurrent}>Shop</span>
-      </p>
+      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+        <ol className={styles.breadcrumbList}>
+          <li>
+            <Link href="/" className={styles.breadcrumbLink}>
+              Home
+            </Link>
+          </li>
+          <li aria-hidden="true" className={styles.breadcrumbSep}>
+            |
+          </li>
+          <li>
+            <span className={styles.breadcrumbCurrent} aria-current="page">
+              Shop
+            </span>
+          </li>
+        </ol>
+      </nav>
       <h1 className={styles.title}>Discover our products</h1>
       <p className={styles.description}>
         Lorem ipsum dolor sit amet consectetur. Amet est posuere rhoncus scelerisque. Dolor integer

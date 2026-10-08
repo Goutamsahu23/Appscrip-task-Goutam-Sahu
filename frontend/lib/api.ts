@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import type { CategoriesResponse, ProductQuery, ProductsResponse } from '@/types/product';
 
 function getApiUrl(): string {
@@ -10,10 +12,8 @@ function getApiUrl(): string {
   return url.replace(/\/$/, '');
 }
 
-async function apiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(`${getApiUrl()}${path}`, {
-    cache: 'no-store',
-  });
+async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${getApiUrl()}${path}`, init);
 
   if (!response.ok) {
     throw new Error(`API request failed (${response.status}) for ${path}`);
@@ -22,7 +22,7 @@ async function apiFetch<T>(path: string): Promise<T> {
   return (await response.json()) as T;
 }
 
-export async function getProducts(params: ProductQuery = {}): Promise<ProductsResponse> {
+export const getProducts = cache(async (params: ProductQuery = {}): Promise<ProductsResponse> => {
   const search = new URLSearchParams();
 
   if (params.page) search.set('page', String(params.page));
@@ -34,9 +34,13 @@ export async function getProducts(params: ProductQuery = {}): Promise<ProductsRe
   if (params.q) search.set('q', params.q);
 
   const query = search.toString();
-  return apiFetch<ProductsResponse>(`/products${query ? `?${query}` : ''}`);
-}
+  return apiFetch<ProductsResponse>(`/products${query ? `?${query}` : ''}`, {
+    cache: 'no-store',
+  });
+});
 
-export async function getCategories(): Promise<CategoriesResponse> {
-  return apiFetch<CategoriesResponse>('/categories');
-}
+export const getCategories = cache(async (): Promise<CategoriesResponse> => {
+  return apiFetch<CategoriesResponse>('/categories', {
+    next: { revalidate: 300 },
+  });
+});

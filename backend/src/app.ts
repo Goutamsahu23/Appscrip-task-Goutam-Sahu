@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import path from 'node:path';
 
 import { env } from './config/env';
 import { errorHandler } from './middlewares/errorHandler';
@@ -20,6 +21,15 @@ export function createApp() {
     }),
   );
   app.use(express.json());
+
+  app.use(
+    '/images',
+    express.static(path.join(process.cwd(), 'public', 'images'), {
+      maxAge: '7d',
+      immutable: true,
+      fallthrough: false,
+    }),
+  );
 
   app.use('/api', apiRouter);
 

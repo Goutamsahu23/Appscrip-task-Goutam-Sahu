@@ -6,6 +6,7 @@ import styles from './ProductCard.module.css';
 
 type ProductCardProps = {
   product: Product;
+  priority?: boolean;
 };
 
 function formatPrice(price: number) {
@@ -15,7 +16,7 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, priority = false }: ProductCardProps) {
   const image = product.images[0];
   const imageSrc = image?.url ?? '/icons/logo-mark.svg';
   const imageAlt = image?.alt ?? product.title;
@@ -29,14 +30,15 @@ export function ProductCard({ product }: ProductCardProps) {
           alt={imageAlt}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          priority={priority}
         />
       </div>
 
       <div className={styles.body}>
         <div className={styles.titleRow}>
-          <h2 className={styles.title} title={product.title}>
+          <h3 className={styles.title} title={product.title}>
             {product.title}
-          </h2>
+          </h3>
           <button type="button" className={styles.wishlist} aria-label="Add to wishlist">
             <Image src="/icons/heart.svg" alt="" width={18} height={18} />
           </button>

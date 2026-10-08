@@ -1,8 +1,19 @@
 import { Prisma } from '@prisma/client';
 
+import { env } from '../../config/env';
 import { NotFoundError } from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
 import type { ListProductsQuery } from './products.schema';
+
+function toAbsoluteImageUrl(url: string): string {
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  const base = env.PUBLIC_URL.replace(/\/$/, '');
+  const path = url.startsWith('/') ? url : `/${url}`;
+  return `${base}${path}`;
+}
 
 const productInclude = {
   category: {
@@ -51,7 +62,10 @@ function serializeProduct(product: ProductRow) {
     ratingCount: product.ratingCount,
     categoryId: product.categoryId,
     category: product.category,
-    images: product.images,
+    images: product.images.map((image) => ({
+      ...image,
+      url: toAbsoluteImageUrl(image.url),
+    })),
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
   };

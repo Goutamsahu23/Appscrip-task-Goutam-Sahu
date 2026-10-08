@@ -22,30 +22,13 @@ export function FilterSidebar({ categories, current, onNavigate }: FilterSidebar
   const { isPending, startTransition } = useNavigationPending();
   const [categoryOpen, setCategoryOpen] = useState(true);
   const [priceOpen, setPriceOpen] = useState(true);
-  const [query, setQuery] = useState(current.q ?? '');
   const [minInput, setMinInput] = useState(current.minPrice?.toString() ?? '');
   const [maxInput, setMaxInput] = useState(current.maxPrice?.toString() ?? '');
 
   useEffect(() => {
-    setQuery(current.q ?? '');
     setMinInput(current.minPrice?.toString() ?? '');
     setMaxInput(current.maxPrice?.toString() ?? '');
-  }, [current.q, current.minPrice, current.maxPrice]);
-
-  useEffect(() => {
-    const trimmed = query.trim();
-    const nextQ = trimmed || undefined;
-
-    if (nextQ === current.q) return;
-
-    const timer = window.setTimeout(() => {
-      startTransition(() => {
-        router.push(hrefWithParams(current, { q: nextQ, page: null }));
-      });
-    }, 350);
-
-    return () => window.clearTimeout(timer);
-  }, [query, current, router, startTransition]);
+  }, [current.minPrice, current.maxPrice]);
 
   function navigate(changes: Parameters<typeof hrefWithParams>[1]) {
     startTransition(() => {
@@ -77,18 +60,6 @@ export function FilterSidebar({ categories, current, onNavigate }: FilterSidebar
 
   return (
     <div className={styles.sidebar} data-pending={isPending ? 'true' : 'false'}>
-      <label className={styles.search}>
-        <Image src="/icons/search.svg" alt="" width={16} height={16} />
-        <input
-          className={styles.searchInput}
-          type="search"
-          placeholder="Search products"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          aria-label="Search products"
-        />
-      </label>
-
       {hasActiveFilters ? (
         <button
           type="button"
@@ -126,38 +97,48 @@ export function FilterSidebar({ categories, current, onNavigate }: FilterSidebar
 
         {categoryOpen ? (
           <div className={styles.sectionBody}>
-            <div className={styles.options} role="radiogroup" aria-label="Category">
-              <button
-                type="button"
-                className={styles.option}
-                role="radio"
-                aria-checked={!current.category}
-                onClick={() => navigate({ category: undefined, page: null })}
-              >
-                <span
-                  className={`${styles.radio} ${!current.category ? styles.radioActive : ''}`}
-                />
-                All
-              </button>
+            <fieldset className={styles.fieldset}>
+              <legend className="srOnly">Category</legend>
+              <div className={styles.options}>
+                <label className={styles.option}>
+                  <input
+                    className={styles.nativeRadio}
+                    type="radio"
+                    name="category"
+                    value=""
+                    checked={!current.category}
+                    onChange={() => navigate({ category: undefined, page: null })}
+                  />
+                  <span
+                    className={`${styles.radio} ${!current.category ? styles.radioActive : ''}`}
+                    aria-hidden="true"
+                  />
+                  All
+                </label>
 
-              {categories.map((category) => {
-                const selected = current.category === category.slug;
-                return (
-                  <button
-                    key={category.id}
-                    type="button"
-                    className={styles.option}
-                    role="radio"
-                    aria-checked={selected}
-                    onClick={() => navigate({ category: category.slug, page: null })}
-                  >
-                    <span className={`${styles.radio} ${selected ? styles.radioActive : ''}`} />
-                    {category.name}
-                    <span className={styles.count}>{category.productCount}</span>
-                  </button>
-                );
-              })}
-            </div>
+                {categories.map((category) => {
+                  const selected = current.category === category.slug;
+                  return (
+                    <label key={category.id} className={styles.option}>
+                      <input
+                        className={styles.nativeRadio}
+                        type="radio"
+                        name="category"
+                        value={category.slug}
+                        checked={selected}
+                        onChange={() => navigate({ category: category.slug, page: null })}
+                      />
+                      <span
+                        className={`${styles.radio} ${selected ? styles.radioActive : ''}`}
+                        aria-hidden="true"
+                      />
+                      {category.name}
+                      <span className={styles.count}>{category.productCount}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
           </div>
         ) : null}
       </section>

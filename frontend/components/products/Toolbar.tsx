@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import type { RefObject } from 'react';
 
 import type { ParsedSearchParams } from '@/lib/searchParams';
 
@@ -13,6 +14,7 @@ type ToolbarProps = {
   filtersVisible: boolean;
   onToggleFilters: () => void;
   onOpenMobileFilters: () => void;
+  mobileFilterRef?: RefObject<HTMLButtonElement | null>;
 };
 
 export function Toolbar({
@@ -21,6 +23,7 @@ export function Toolbar({
   filtersVisible,
   onToggleFilters,
   onOpenMobileFilters,
+  mobileFilterRef,
 }: ToolbarProps) {
   return (
     <div className={styles.toolbar}>
@@ -41,7 +44,12 @@ export function Toolbar({
       </div>
 
       <div className={styles.right}>
-        <button type="button" className={styles.mobileFilter} onClick={onOpenMobileFilters}>
+        <button
+          ref={mobileFilterRef}
+          type="button"
+          className={styles.mobileFilter}
+          onClick={onOpenMobileFilters}
+        >
           Filter
           <Image src="/icons/chevron-down.svg" alt="" width={14} height={14} />
         </button>

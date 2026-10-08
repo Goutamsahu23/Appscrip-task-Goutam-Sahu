@@ -11,9 +11,9 @@ type ProductGridProps = {
 export function ProductGrid({ products, filtersVisible = true }: ProductGridProps) {
   return (
     <ul className={`${styles.grid} ${filtersVisible ? styles.cols3 : styles.cols4}`}>
-      {products.map((product) => (
+      {products.map((product, index) => (
         <li key={product.id}>
-          <ProductCard product={product} />
+          <ProductCard product={product} priority={index < 4} />
         </li>
       ))}
     </ul>

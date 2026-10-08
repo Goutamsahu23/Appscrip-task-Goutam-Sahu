@@ -6,5 +6,8 @@ coverage/
 .env.*
 !.env.example
 
+# Seed regenerates product images from FakeStore
+public/images/products/
+
 *.log
 .DS_Store

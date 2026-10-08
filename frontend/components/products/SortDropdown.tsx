@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 
 import { SORT_OPTIONS } from '@/lib/constants';
 import { hrefWithParams, type ParsedSearchParams } from '@/lib/searchParams';
@@ -20,43 +20,98 @@ export function SortDropdown({ current }: SortDropdownProps) {
   const { isPending, startTransition } = useNavigationPending();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const menuId = useId();
 
-  const activeOption =
-    SORT_OPTIONS.find((option) => option.value === current.sort) ?? SORT_OPTIONS[0];
+  const activeIndex = Math.max(
+    0,
+    SORT_OPTIONS.findIndex((option) => option.value === current.sort),
+  );
+  const activeOption = SORT_OPTIONS[activeIndex] ?? SORT_OPTIONS[0];
 
   useEffect(() => {
+    if (!open) return;
+
     function onPointerDown(event: MouseEvent) {
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
       }
     }
 
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') setOpen(false);
-    }
-
     document.addEventListener('mousedown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, []);
+    return () => document.removeEventListener('mousedown', onPointerDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    itemRefs.current[activeIndex]?.focus();
+  }, [open, activeIndex]);
+
+  function closeMenu(restoreFocus = true) {
+    setOpen(false);
+    if (restoreFocus) {
+      triggerRef.current?.focus();
+    }
+  }
 
   function selectSort(value: SortValue | undefined) {
-    setOpen(false);
+    closeMenu();
     startTransition(() => {
       router.push(hrefWithParams(current, { sort: value, page: null }));
     });
   }
 
+  function focusItem(index: number) {
+    const next = (index + SORT_OPTIONS.length) % SORT_OPTIONS.length;
+    itemRefs.current[next]?.focus();
+  }
+
+  function onMenuKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (!open) return;
+
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault();
+        closeMenu();
+        break;
+      case 'ArrowDown': {
+        event.preventDefault();
+        const currentIdx = itemRefs.current.findIndex((el) => el === document.activeElement);
+        focusItem(currentIdx < 0 ? 0 : currentIdx + 1);
+        break;
+      }
+      case 'ArrowUp': {
+        event.preventDefault();
+        const currentIdx = itemRefs.current.findIndex((el) => el === document.activeElement);
+        focusItem(currentIdx < 0 ? SORT_OPTIONS.length - 1 : currentIdx - 1);
+        break;
+      }
+      case 'Home':
+        event.preventDefault();
+        focusItem(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        focusItem(SORT_OPTIONS.length - 1);
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
-    <div className={styles.wrap} ref={rootRef} data-pending={isPending ? 'true' : 'false'}>
+    <div
+      className={styles.wrap}
+      ref={rootRef}
+      data-pending={isPending ? 'true' : 'false'}
+      onKeyDown={onMenuKeyDown}
+    >
       <button
+        ref={triggerRef}
         type="button"
         className={styles.trigger}
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((value) => !value)}
@@ -66,27 +121,31 @@ export function SortDropdown({ current }: SortDropdownProps) {
       </button>
 
       {open ? (
-        <ul className={styles.menu} id={menuId} role="listbox">
-          {SORT_OPTIONS.map((option) => {
+        <div className={styles.menu} id={menuId} role="menu" aria-label="Sort products">
+          {SORT_OPTIONS.map((option, index) => {
             const selected = option.value === current.sort;
             return (
-              <li key={option.label} role="option" aria-selected={selected}>
-                <button
-                  type="button"
-                  className={`${styles.option} ${selected ? styles.optionActive : ''}`}
-                  onClick={() => selectSort(option.value)}
-                >
-                  <span className={styles.label}>{option.label}</span>
-                  <span className={styles.checkSlot} aria-hidden="true">
-                    {selected ? (
-                      <Image src="/icons/check.svg" alt="" width={16} height={16} />
-                    ) : null}
-                  </span>
-                </button>
-              </li>
+              <button
+                key={option.label}
+                ref={(element) => {
+                  itemRefs.current[index] = element;
+                }}
+                type="button"
+                role="menuitemradio"
+                aria-checked={selected}
+                className={`${styles.option} ${selected ? styles.optionActive : ''}`}
+                onClick={() => selectSort(option.value)}
+              >
+                <span className={styles.label}>{option.label}</span>
+                <span className={styles.checkSlot} aria-hidden="true">
+                  {selected ? (
+                    <Image src="/icons/check.svg" alt="" width={16} height={16} />
+                  ) : null}
+                </span>
+              </button>
             );
           })}
-        </ul>
+        </div>
       ) : null}
     </div>
   );

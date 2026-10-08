@@ -7,7 +7,14 @@ import { FOOTER_BRAND_LINKS, FOOTER_QUICK_LINKS } from '@/lib/constants';
 
 import styles from './Footer.module.css';
 
-const PAYMENT_BADGES = ['GPay', 'MC', 'PayPal', 'Amex', 'Apple', 'Shop'];
+const PAYMENT_METHODS = [
+  { label: 'Google Pay', src: '/icons/payments/gpay.svg' },
+  { label: 'Mastercard', src: '/icons/payments/mastercard.svg' },
+  { label: 'PayPal', src: '/icons/payments/paypal.svg' },
+  { label: 'American Express', src: '/icons/payments/amex.svg' },
+  { label: 'Apple Pay', src: '/icons/payments/apple-pay.svg' },
+  { label: 'Shop Pay', src: '/icons/payments/shop-pay.svg' },
+] as const;
 
 export function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
@@ -155,10 +162,15 @@ export function Footer() {
                 </a>
               </div>
               <p className={styles.paymentsLabel}>mettā muse accepts</p>
-              <div className={styles.payments}>
-                {PAYMENT_BADGES.map((badge) => (
-                  <span key={badge} className={styles.badge}>
-                    {badge}
+              <div className={styles.payments} aria-label="Accepted payment methods">
+                {PAYMENT_METHODS.map((method) => (
+                  <span key={method.label} className={styles.badge}>
+                    <Image
+                      src={method.src}
+                      alt={method.label}
+                      width={56}
+                      height={32}
+                    />
                   </span>
                 ))}
               </div>
@@ -167,7 +179,7 @@ export function Footer() {
         </div>
 
         <p className={styles.copyright}>
-          Copyright © {new Date().getFullYear()} mettamuse. All rights reserved.
+          Copyright © 2023 mettamuse. All rights reserved.
         </p>
       </div>
     </footer>

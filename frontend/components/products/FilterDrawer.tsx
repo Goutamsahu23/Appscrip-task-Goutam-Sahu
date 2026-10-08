@@ -1,9 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useRef, type RefObject } from 'react';
 
 import type { ParsedSearchParams } from '@/lib/searchParams';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import type { Category } from '@/types/product';
 
 import { FilterSidebar } from './FilterSidebar';
@@ -14,25 +15,18 @@ type FilterDrawerProps = {
   onClose: () => void;
   categories: Category[];
   current: ParsedSearchParams;
+  triggerRef?: RefObject<HTMLButtonElement | null>;
 };
 
-export function FilterDrawer({ open, onClose, categories, current }: FilterDrawerProps) {
-  useEffect(() => {
-    if (!open) return;
-
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') onClose();
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [open, onClose]);
+export function FilterDrawer({
+  open,
+  onClose,
+  categories,
+  current,
+  triggerRef,
+}: FilterDrawerProps) {
+  const panelRef = useRef<HTMLElement>(null);
+  useFocusTrap(panelRef, { open, onClose, restoreFocusRef: triggerRef });
 
   if (!open) return null;
 
@@ -42,9 +36,16 @@ export function FilterDrawer({ open, onClose, categories, current }: FilterDrawe
         type="button"
         className={styles.overlay}
         aria-label="Close filters overlay"
+        tabIndex={-1}
         onClick={onClose}
       />
-      <aside className={styles.panel} aria-label="Filters" role="dialog" aria-modal="true">
+      <aside
+        ref={panelRef}
+        className={styles.panel}
+        aria-label="Filters"
+        role="dialog"
+        aria-modal="true"
+      >
         <div className={styles.header}>
           <h2 className={styles.title}>Filters</h2>
           <button type="button" className={styles.close} aria-label="Close filters" onClick={onClose}>

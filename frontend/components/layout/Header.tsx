@@ -2,15 +2,17 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useRef, useState } from 'react';
 
 import { NAV_LINKS } from '@/lib/constants';
 
 import styles from './Header.module.css';
+import { HeaderSearch } from './HeaderSearch';
 import { MobileMenu } from './MobileMenu';
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -18,10 +20,12 @@ export function Header() {
         <div className={styles.topRow}>
           <div className={styles.left}>
             <button
+              ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
               aria-label="Open menu"
               aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
               onClick={() => setMenuOpen(true)}
             >
               <Image src="/icons/menu.svg" alt="" width={22} height={22} />
@@ -34,9 +38,15 @@ export function Header() {
           </Link>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.iconButton} aria-label="Search">
-              <Image src="/icons/search.svg" alt="" width={20} height={20} />
-            </button>
+            <Suspense
+              fallback={
+                <button type="button" className={styles.iconButton} aria-label="Search">
+                  <Image src="/icons/search.svg" alt="" width={20} height={20} />
+                </button>
+              }
+            >
+              <HeaderSearch />
+            </Suspense>
             <button type="button" className={styles.iconButton} aria-label="Wishlist">
               <Image src="/icons/heart.svg" alt="" width={20} height={20} />
             </button>
@@ -66,7 +76,11 @@ export function Header() {
         </nav>
       </header>
 
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        triggerRef={menuButtonRef}
+      />
     </>
   );
 }
