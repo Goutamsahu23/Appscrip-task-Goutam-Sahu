@@ -124,67 +124,71 @@ async function main() {
     if (result.downloaded) downloadedCount += 1;
   }
 
-  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const categoriesBySlug = new Map<string, { id: number }>();
+  // Remote DBs (e.g. Render) need a higher interactive timeout than the 5s default
+  await prisma.$transaction(
+    async (tx: Prisma.TransactionClient) => {
+      const categoriesBySlug = new Map<string, { id: number }>();
 
-    for (const name of categoryNames) {
-      const slug = toSlug(name);
-      const category = await tx.category.upsert({
-        where: { slug },
-        create: { name, slug },
-        update: { name },
-      });
-      categoriesBySlug.set(slug, category);
-    }
-
-    for (const item of products) {
-      const slug = toSlug(item.category);
-      const category = categoriesBySlug.get(slug);
-
-      if (!category) {
-        throw new Error(`No category mapped for "${item.category}"`);
+      for (const name of categoryNames) {
+        const slug = toSlug(name);
+        const category = await tx.category.upsert({
+          where: { slug },
+          create: { name, slug },
+          update: { name },
+        });
+        categoriesBySlug.set(slug, category);
       }
 
-      const imageUrl = imageUrls.get(item.id) ?? item.image;
+      for (const item of products) {
+        const slug = toSlug(item.category);
+        const category = categoriesBySlug.get(slug);
 
-      // Keep FakeStore ids so re-running the seed updates the same rows
-      await tx.product.upsert({
-        where: { id: item.id },
-        create: {
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          price: item.price,
-          ratingRate: item.rating.rate,
-          ratingCount: item.rating.count,
-          categoryId: category.id,
-          images: {
-            create: {
-              url: imageUrl,
-              alt: item.title,
-              position: 0,
+        if (!category) {
+          throw new Error(`No category mapped for "${item.category}"`);
+        }
+
+        const imageUrl = imageUrls.get(item.id) ?? item.image;
+
+        // Keep FakeStore ids so re-running the seed updates the same rows
+        await tx.product.upsert({
+          where: { id: item.id },
+          create: {
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            price: item.price,
+            ratingRate: item.rating.rate,
+            ratingCount: item.rating.count,
+            categoryId: category.id,
+            images: {
+              create: {
+                url: imageUrl,
+                alt: item.title,
+                position: 0,
+              },
             },
           },
-        },
-        update: {
-          title: item.title,
-          description: item.description,
-          price: item.price,
-          ratingRate: item.rating.rate,
-          ratingCount: item.rating.count,
-          categoryId: category.id,
-          images: {
-            deleteMany: {},
-            create: {
-              url: imageUrl,
-              alt: item.title,
-              position: 0,
+          update: {
+            title: item.title,
+            description: item.description,
+            price: item.price,
+            ratingRate: item.rating.rate,
+            ratingCount: item.rating.count,
+            categoryId: category.id,
+            images: {
+              deleteMany: {},
+              create: {
+                url: imageUrl,
+                alt: item.title,
+                position: 0,
+              },
             },
           },
-        },
-      });
-    }
-  });
+        });
+      }
+    },
+    { timeout: 60_000 },
+  );
 
   // Explicit ids leave the serial sequence behind; nudge it forward
   await prisma.$executeRaw`
