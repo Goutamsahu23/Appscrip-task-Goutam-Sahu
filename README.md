@@ -12,14 +12,14 @@ Full-stack product listing page (PLP) built against the [Appscrip design](https:
 | Surface | URL |
 | --- | --- |
 | Frontend | [https://appscrip-task-goutam-sahu.vercel.app/](https://appscrip-task-goutam-sahu.vercel.app/) |
-| API | [https://appscrip-task-goutam-sahu.onrender.com/api](https://appscrip-task-goutam-sahu.onrender.com/api) |
+| API | [https://appscrip-task-goutam-sahu.onrender.com/api/products](https://appscrip-task-goutam-sahu.onrender.com/api/products) |
 
 Local defaults while developing:
 
 | Surface | URL |
 | --- | --- |
 | Frontend | http://localhost:3000 |
-| API | http://localhost:4000/api |
+| API | http://localhost:4000/api/products |
 
 ---
 
@@ -236,26 +236,28 @@ Dev-only: TypeScript, ESLint, Prettier, `tsx`, `pino-pretty`.
 
 ## 8. AI usage
 
-This project was built with **Cursor** (AI-assisted IDE) as a coding partner, not as an unsupervised generator.
+Built with **Cursor** as a pair-programming assistant. Architecture, product decisions, and final code are mine; AI sped up typing and first drafts under my direction.
 
-**What AI helped with**
+**What I owned**
 
-- Scaffolding Express/Prisma modules and Next.js App Router structure
-- Implementing URL-driven filters, sort, pagination, and SSR data fetching
-- SEO (metadata, JSON-LD, image seeding) and accessibility (focus trap, keyboard sort menu)
-- README drafts and iterative UI polish against the Figma brief
+- Interpreting the assignment + Figma brief, choosing the stack, and cutting scope.
+- API design (routes, Zod validation, Prisma schema/migrations, seed from FakeStore into Postgres)
+- PLP behaviour: URL-driven filters/sort/search/pagination, SSR fetching, SEO metadata/JSON-LD, a11y patterns
+- Matching the UI to the design (layout, header/footer, filters, cards) and deciding intentional deviations
+- Local + production setup (env, Render/Vercel deploy, DB migrate/seed), lint/typecheck, browser QA, Lighthouse
+- Reviewing every AI suggestion — keeping, rewriting, or rejecting what didn’t fit the brief
 
-**What I owned / verified**
+**How AI helped (acceleration only)**
 
-- Assignment requirements, scope cuts (e.g. no static HTML step when deferred), and design trade-offs
-- Running migrations, seed, typecheck, lint, and manual browser checks
-- Confirming SSR in view-source, API contracts, and Lighthouse sample scores
-- Final code review before commit — AI suggestions were edited when they didn’t match the design or brief
+- Boilerplate and repetitive file scaffolding (module/folder layout, CSS module stubs)
+- First-pass drafts for README wording and small UI/CSS tweaks I then edited
+- Looking up syntax / alternate approaches while I stayed in control of the design
 
 **What AI did not do**
 
-- Deploy production hosting or invent fake live URLs
-- Replace understanding of the stack — prompts and reviews stayed requirement-driven
+- Decide requirements, trade-offs, or “good enough” vs out of scope
+- Deploy, host, or invent live URLs
+- Ship code unreviewed into the repo
 
 ---
 
