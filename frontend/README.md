@@ -19,8 +19,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-After the backend seed downloads images, restart the API if it was already running so `/images` is served.
-
 ## Environment variables
 
 Copy [`.env.example`](.env.example) to `.env.local`. Never commit `.env.local`.

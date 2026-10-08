@@ -6,7 +6,7 @@ coverage/
 .env.*
 !.env.example
 
-# Seed regenerates product images from FakeStore
+# Optional local image cache (seed stores FakeStore URLs in DB)
 public/images/products/
 
 *.log

@@ -55,7 +55,7 @@ cp .env.example .env
 
 npm install
 npm run db:migrate
-npm run db:seed    # loads FakeStore data + downloads images to public/images/products/
+npm run db:seed    # loads FakeStore products + stores image URLs in DB
 npm run dev        # http://localhost:4000
 ```
 
@@ -63,7 +63,7 @@ Seed behaviour:
 
 1. Tries `https://fakestoreapi.com/products`
 2. Falls back to `backend/prisma/data/fakestore-products.json` if FakeStore is down
-3. Downloads images into `backend/public/images/products/<seo-slug>.<ext>` and stores paths in the DB
+3. Stores each product’s FakeStore `image` URL in the DB (absolute `https://fakestoreapi.com/img/...`)
 
 ### Frontend
 
@@ -87,8 +87,7 @@ Keep the API running while developing; otherwise the storefront shows the error 
 Browser
   └─ Next.js (SSR page.tsx → getProducts / getCategories)
        └─ Express API (/api/*)
-            └─ Prisma → PostgreSQL
-            └─ Static /images/products/* (seeded files)
+            └─ Prisma → PostgreSQL (product rows include FakeStore image URLs)
 ```
 
 - **SSR:** The home page fetches products on the server. Filter/sort/search/pagination update the URL; Next navigates without a full document reload while still re-rendering from the server.
@@ -104,7 +103,6 @@ Appscrip-task-Goutam-Sahu/
 │   │   ├── migrations/
 │   │   ├── seed.ts
 │   │   └── data/fakestore-products.json
-│   ├── public/images/products/   # gitignored; created by seed
 │   └── src/
 │       ├── app.ts / server.ts
 │       ├── config/env.ts
@@ -167,7 +165,7 @@ curl "http://localhost:4000/api/products/1"
 curl "http://localhost:4000/api/categories"
 ```
 
-Static product images: `GET http://localhost:4000/images/products/<slug>.png`
+Product images come from FakeStore URLs stored in the DB (e.g. `https://fakestoreapi.com/img/...`).
 
 ---
 

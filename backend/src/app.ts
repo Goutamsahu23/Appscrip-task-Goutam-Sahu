@@ -27,7 +27,6 @@ export function createApp() {
     express.static(path.join(process.cwd(), 'public', 'images'), {
       maxAge: '7d',
       immutable: true,
-      fallthrough: false,
     }),
   );
 
