@@ -11,8 +11,8 @@ Full-stack product listing page (PLP) built against the [Appscrip design](https:
 
 | Surface | URL |
 | --- | --- |
-| Frontend | _TODO — add deployed Next.js URL (e.g. Vercel)_ |
-| API | _TODO — add deployed API URL (e.g. Render / Railway)_ |
+| Frontend | [https://appscrip-task-goutam-sahu.vercel.app/](https://appscrip-task-goutam-sahu.vercel.app/) |
+| API | [https://appscrip-task-goutam-sahu.onrender.com/api](https://appscrip-task-goutam-sahu.onrender.com/api) |
 
 Local defaults while developing:
 
@@ -188,10 +188,21 @@ Product images come from FakeStore URLs stored in the DB (e.g. `https://fakestor
 | Open Graph / Twitter | Set via metadata + `SITE_URL` / `metadataBase` |
 | Structured data | JSON-LD `ItemList` of `Product` + `BreadcrumbList` |
 | Headings | Single `h1` (hero), listing `h2` (sr-only “Products”), cards as `h3` |
-| Images | SEO filenames from seed, meaningful `alt`, `next/image` AVIF/WebP, `priority` on first row |
+| Images | FakeStore image URLs from API, meaningful `alt`, `next/image` AVIF/WebP, `priority` on first row |
 | Breadcrumb | Semantic `<nav>` (mobile-visible per design) |
 
-Sample Lighthouse (desktop, local production audit of `/`): Accessibility **96**, Best Practices **96**, SEO **91**.
+### Lighthouse (desktop, production)
+
+Audit of [https://appscrip-task-goutam-sahu.vercel.app/](https://appscrip-task-goutam-sahu.vercel.app/) (Chrome DevTools Lighthouse):
+
+| Category | Score |
+| --- | --- |
+| Performance | 96 |
+| Accessibility | 96 |
+| Best Practices | 96 |
+| SEO | 91 |
+
+![Lighthouse desktop scores](docs/lighthouse-desktop.png)
 
 ---
 
@@ -257,7 +268,6 @@ This project was built with **Cursor** (AI-assisted IDE) as a coding partner, no
 | Header wishlist / cart / profile are visual-only | Wire real routes or hide until implemented |
 | No product detail page UI | Build `/products/[id]` using existing `GET /products/:id` |
 | ~20 seeded products | Larger catalog + pagination stress tests |
-| Live deploy URLs not filled in yet | Deploy frontend (Vercel) + API/DB (Render/Railway) and update §1 |
 | Search `ILIKE` on description is heavier than title alone | Full-text search (`tsvector`) or dedicated search service |
 | No automated e2e tests | Playwright for filter/sort/pagination + SSR smoke tests |
 | Rate limiting / auth omitted (not required) | Add if the API is public on the internet |
